@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spin Pembagian Kelompok</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 { margin-bottom: 5px; }
+    .wheel {
+      margin: 20px auto;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      border: 6px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background: white;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .groups {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .group {
+      background: white;
+      padding: 10px;
+      width: 200px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body><h1>🎡 Spin Pembagian Kelompok</h1>
+<p>Spin nama → otomatis masuk ke kelompok</p><div class="wheel" id="wheel">Siap Spin</div><button onclick="spinNama()">SPIN NAMA</button>
+
+<div class="groups">
+  <div class="group"><b>Kelompok 1 (4)</b><ul id="k1"></ul></div>
+  <div class="group"><b>Kelompok 2 (4)</b><ul id="k2"></ul></div>
+  <div class="group"><b>Kelompok 3 (3)</b><ul id="k3"></ul></div>
+  <div class="group"><b>Kelompok 4 (3)</b><ul id="k4"></ul></div>
+</div><script>
+let nama = [
+  "Anisa Apriliyanti",
+  "Anisa Syifa Febriani",
+  "Afwa Mumtajah",
+  "Chairul Fatkan",
+  "Eni Aisah Fitri",
+  "Fadliatul Najiah",
+  "Hasan Amirul Mulya",
+  "Hazria Ahdayani",
+  "Meila Anjani",
+  "Syahrul Maulana Yusuf",
+  "Siti Nuraeni",
+  "Winda",
+  "Fathur Febriansyah",
+  "M. Hafidz"
+];
+
+let kelompok = [
+  {id: 'k1', max: 4, nama: 'Kelompok satu'},
+  {id: 'k2', max: 4, nama: 'Kelompok dua'},
+  {id: 'k3', max: 3, nama: 'Kelompok tiga'},
+  {id: 'k4', max: 3, nama: 'Kelompok empat'}
+];
+
+let currentKelompok = 0;
+
+// suara
+const suaraNama = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
+const suaraMasuk = new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg');
+
+function speak(text) {
+  let msg = new SpeechSynthesisUtterance(text);
+  msg.lang = 'id-ID';
+  speechSynthesis.speak(msg);
+}
+
+function spinNama() {
+  if (nama.length === 0) {
+    document.getElementById('wheel').innerText = 'Selesai 🎉';
+    speak('Semua kelompok sudah terisi');
+    return;
+  }
+
+  if (document.getElementById(kelompok[currentKelompok].id).children.length >= kelompok[currentKelompok].max) {
+    currentKelompok++;
+  }
+
+  if (currentKelompok >= kelompok.length) return;
+
+  let index = Math.floor(Math.random() * nama.length);
+  let hasil = nama.splice(index, 1)[0];
+
+  suaraNama.play();
+  document.getElementById('wheel').innerText = hasil;
+  speak(hasil);
+
+  setTimeout(() => {
+    let li = document.createElement('li');
+    li.innerText = hasil;
+    document.getElementById(kelompok[currentKelompok].id).appendChild(li);
+    suaraMasuk.play();
+    speak(hasil + ' masuk ' + kelompok[currentKelompok].nama);
+  }, 800);
+}
+</script></body>
+</html>
